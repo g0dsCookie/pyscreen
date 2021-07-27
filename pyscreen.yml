@@ -1,0 +1,32 @@
+display:
+  type: ssd1306
+  width: 128
+  height: 32
+  padding:
+    top: 0
+    left: 0
+  font:
+    name: DejaVuSansMono.ttf
+    size: 10
+
+menus:
+  - name: Main
+
+gpios:
+  - name: main_led
+    type: led
+    pin: 27
+  - name: main_btn
+    type: Button
+    pin: 17
+    bouncetime: 100
+    actions:
+      - action: next_scene
+        max: 1
+      - action: scene_action
+        min: 2
+
+pyscreen:
+  loglevel: DEBUG
+  interval: 0.5
+  standby: 10

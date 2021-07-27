@@ -1,0 +1,6 @@
+rpi.gpio
+adafruit-blinka
+adafruit-circuitpython-ssd1306
+psutil
+pyyaml
+packaging
