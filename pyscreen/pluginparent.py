@@ -2,6 +2,7 @@ import logging
 from pathlib import Path
 import re
 import importlib.util
+import inspect
 import os
 
 from typing import Dict, List, Any
@@ -58,10 +59,17 @@ class PluginParent:
             spec = importlib.util.spec_from_file_location(modname, name)
             mod = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(mod)
-            plugin: Plugin = mod.plugin()
-            self._plugins[plugin.name.lower()] = plugin
-            self._log.info("Loaded %s from %s [%s]", plugin.name, plugin.author,
-                           plugin.version)
+            
+            for m in dir(mod):
+                if m.startswith("__") or m.endswith("__"):
+                    continue
+                attr = getattr(mod, m)
+                if not inspect.isclass(attr) or not issubclass(attr, Plugin):
+                    continue
+                p: Plugin = attr()
+                self._plugins[p.name.lower()] = p
+                self._log.info("Loaded %s from %s [%s]", p.name, p.author,
+                               p.version)
             
     def load_plugins(self):
         self._load_internal()
