@@ -101,7 +101,7 @@ class PyScreen:
                 if gpio.update():
                     last_input = time.time()
             
-            if not standby and (cur - last_input) >= self._standby:
+            if not standby and self._standby > 0 and (cur - last_input) >= self._standby:
                 self._display.poweroff()
                 standby = True
             
