@@ -3,17 +3,24 @@ import logging
 import time
 from typing import Dict, Any, Union, Callable
 
+from PIL.ImageDraw import ImageDraw
+
 from .display import Display
 
 
 class Menu(abc.ABC):
-    def __init__(self, cfg: Dict[str, Any] = None) -> None:
+    def __init__(self, name: str = None, cfg: Dict[str, Any] = None) -> None:
         self._log = logging.getLogger(self.__class__.__name__)
+        
+        self._name = name or self.__class__.__name__
         
         cfg = cfg or {}
         self._interval = int(cfg.get("interval", 5))
         self._update_cache: Dict[str, Dict[str, Union[float, Callable]]] = {}
-        
+
+    @property
+    def name(self) -> str: return self._name
+
     @property
     def log(self) -> logging.Logger: return self._log
     
@@ -48,5 +55,6 @@ class Menu(abc.ABC):
             info["last"] = cur
             
         display.clear()
+        display.write_line("<~- {:^13s} -~>".format(self.name))
         self._update(display)
         display.show()

@@ -22,7 +22,7 @@ class Kubernetes(Plugin):
 
 class PodsMenu(Menu):
     def __init__(self, cfg: Dict[str, Any]) -> None:
-        super().__init__(cfg)
+        super().__init__(name="PODS", cfg=cfg)
 
         if not cfg.get("api_key"):
             kubernetes.config.load_kube_config()
@@ -59,5 +59,4 @@ class PodsMenu(Menu):
 
     def _update(self, display: Display):
         display.write_line("Scheduled: {:2d}".format(self.pods["scheduled"]))
-        display.write_line("Started:   {:2d}".format(self.pods["started"]))
-        display.write_line("Ready:     {:2d}".format(self.pods["ready"]))
+        display.write_line("Started:   {:2d} ({:2d})".format(self.pods["started"], self.pods["ready"]))
