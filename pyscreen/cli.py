@@ -22,7 +22,7 @@ class PyScreen:
         self._log = logging.getLogger(self.__class__.__name__)
 
         mycfg = cfg.get("pyscreen", {})
-        self._loop_interval = float(mycfg.get("interval", 0.5))
+        self._loop_interval = float(mycfg.get("interval", 0.1))
         self._standby = float(mycfg.get("standby", 120))
         
         self._selected_menu = 0
@@ -34,7 +34,10 @@ class PyScreen:
         self._display = self._load_display(cfg.get("display", {}))
         self._menus: List[Menu] = list(self._load_menus(cfg.get("menus", [])))
         self._gpios: Dict[str, GPIO] = dict(self._load_gpios(cfg.get("gpios", [])))
-        
+
+    @property
+    def menu(self) -> Menu: return self._menus[self._selected_menu]
+
     def _load_display(self, cfg: Dict[str, Any]) -> Display:
         typ = cfg.get("type")
         if not typ:
@@ -93,20 +96,23 @@ class PyScreen:
         standby = False
         while True:
             cur = time.time()
-            menu = self._menus[self._selected_menu]
-            
+
             for name, gpio in self._gpios.items():
                 if gpio.type != GPIOType.INPUT:
                     continue
                 if gpio.update():
                     last_input = time.time()
+                    last_menu_update = 0
+                    if standby:
+                        self._display.poweron()
+                        standby = False
             
             if not standby and self._standby > 0 and (cur - last_input) >= self._standby:
                 self._display.poweroff()
                 standby = True
-            
-            if not standby and (cur - last_menu_update) >= menu.interval:
-                menu.update(self._display)
+
+            if not standby and (cur - last_menu_update) >= self.menu.interval:
+                self.menu.update(self._display)
                 last_menu_update = cur
 
             time.sleep(self._loop_interval)
