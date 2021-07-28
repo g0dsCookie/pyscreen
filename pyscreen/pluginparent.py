@@ -49,22 +49,25 @@ class PluginParent:
         self._plugins[p.name.lower()] = p
         self._log.debug("Loaded %s from %s [%s]", p.name, p.author, p.version)
         
-    def _load_external(self, dir: str):
+    def _load_external(self, dirpath: str):
         search = re.compile(r"\.py$", re.IGNORECASE)
         files = filter(lambda f: (not f.startswith("__") and search.search(f)),
-                       os.listdir(dir))
+                       os.listdir(dirpath))
         for file in files:
             name = os.path.splitext(os.path.basename(file))[0]
-            modname = "pyscreen.plugin.%s" % name
-            spec = importlib.util.spec_from_file_location(modname, name)
+            modname = "pyscreen.plugins.%s" % name
+            spec = importlib.util.spec_from_file_location(modname, os.path.join(dirpath, file))
+            if not spec:
+                self._log.error("Failed to load plugin from %s", file)
+                continue
             mod = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(mod)
-            
+
             for m in dir(mod):
                 if m.startswith("__") or m.endswith("__"):
                     continue
                 attr = getattr(mod, m)
-                if not inspect.isclass(attr) or not issubclass(attr, Plugin):
+                if not inspect.isclass(attr) or not issubclass(attr, Plugin) or attr == Plugin:
                     continue
                 p: Plugin = attr()
                 self._plugins[p.name.lower()] = p
