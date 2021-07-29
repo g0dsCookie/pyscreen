@@ -14,6 +14,7 @@ gpios:
   - name: main_led
     type: led
     pin: 27
+    state: "on"
   - name: main_btn
     type: button
     pin: 17
