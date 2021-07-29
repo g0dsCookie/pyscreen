@@ -98,8 +98,6 @@ class PyScreen:
             cur = time.time()
 
             for name, gpio in self._gpios.items():
-                if gpio.type != GPIOType.INPUT:
-                    continue
                 if gpio.update():
                     last_input = time.time()
                     last_menu_update = 0
