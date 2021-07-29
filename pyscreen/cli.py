@@ -58,10 +58,11 @@ class PyScreen:
             m = self._plugins.get_menu(name)
             if not m:
                 raise ValueError("Menu %s not found for %d" % (name, i))
-            m = m(menu)
+            m: Menu = m(menu)
+            m.parent = self
             i += 1
             yield m
-            
+
     def _load_gpios(self, cfg: List[Dict[str, Any]]) -> List[GPIO]:
         i = 0
         for gpio in cfg:
@@ -78,12 +79,15 @@ class PyScreen:
             i += 1
             yield g.name, g
 
+    def get_led(self, name):
+        return self._gpios.get(name)
+
     def next_menu(self):
         self._selected_menu += 1
         if self._selected_menu >= len(self._menus):
             self._selected_menu = 0
         self._log.debug("New selected menu %d", self._selected_menu)
-            
+
     def previous_menu(self):
         self._selected_menu -= 1
         if self._selected_menu < 0:
