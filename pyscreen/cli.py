@@ -90,6 +90,9 @@ class PyScreen:
             self._selected_menu = len(self._menus) - 1
         self._log.debug("New selected menu %d", self._selected_menu)
 
+    def scene_action(self):
+        self.menu.run()
+
     def reset_led(self):
         if not self.menu.led:
             return

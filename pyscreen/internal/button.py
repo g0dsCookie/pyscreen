@@ -27,6 +27,7 @@ class Button(GPIO):
             "next_scene": lambda: self._parent.next_menu(),
             "previous_scene": lambda: self._parent.previous_menu(),
             "reset_led": lambda: self._parent.reset_led(),
+            "scene_action": lambda: self._parent.scene_action(),
         }
         self._actions: List[Dict[str, Union[str, int]]] = []
         for action in cfg.get("actions", []):

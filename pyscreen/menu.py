@@ -36,6 +36,8 @@ class Menu(abc.ABC):
 
     def _show(self, display: Display): pass
 
+    def _run(self): pass
+
     def _add_update_cache(self, name: str, interval: float, func: Callable):
         if name in self._update_cache:
             raise ValueError("%s already exists" % name)
@@ -65,3 +67,5 @@ class Menu(abc.ABC):
         display.write_line("<~- {:^13s} -~>".format(self.name))
         self._show(display)
         display.show()
+
+    def run(self): self._run()
