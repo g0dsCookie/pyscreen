@@ -4,3 +4,4 @@ adafruit-circuitpython-ssd1306
 psutil
 pyyaml
 packaging
+PILLOW
