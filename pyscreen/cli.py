@@ -106,13 +106,16 @@ class PyScreen:
                     if standby:
                         self._display.poweron()
                         standby = False
-            
+
             if not standby and self._standby > 0 and (cur - last_input) >= self._standby:
                 self._display.poweroff()
                 standby = True
 
+            for menu in self._menus:
+                menu.update()
+
             if not standby and (cur - last_menu_update) >= self.menu.interval:
-                self.menu.update(self._display)
+                self.menu.show(self._display)
                 last_menu_update = cur
 
             time.sleep(self._loop_interval)

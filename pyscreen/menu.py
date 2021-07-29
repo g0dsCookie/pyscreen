@@ -27,8 +27,9 @@ class Menu(abc.ABC):
     @property
     def interval(self) -> int: return self._interval
 
-    @abc.abstractmethod
-    def _update(self, display: Display): raise NotImplementedError()
+    def _update(self): pass
+
+    def _show(self, display: Display): pass
 
     def _add_update_cache(self, name: str, interval: float, func: Callable):
         if name in self._update_cache:
@@ -44,7 +45,7 @@ class Menu(abc.ABC):
     def _get_cache(self, name: str) -> Any:
         return self._update_cache.get(name)["cache"]
 
-    def update(self, display: Display):
+    def update(self):
         cur = time.time()
         for name, info in self._update_cache.items():
             interval, last_run, func = info["interval"], info["last"], info["func"]
@@ -53,8 +54,9 @@ class Menu(abc.ABC):
             self.log.debug("Updating cache for %s", name)
             info["cache"] = func()
             info["last"] = cur
-            
+
+    def show(self, display: Display):
         display.clear()
         display.write_line("<~- {:^13s} -~>".format(self.name))
-        self._update(display)
+        self._show(display)
         display.show()

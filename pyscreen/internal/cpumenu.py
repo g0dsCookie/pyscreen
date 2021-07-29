@@ -25,6 +25,6 @@ class CPUMenu(Menu):
     
     def _update_vmem(self): return psutil.virtual_memory().percent
     
-    def _update(self, display: Display):
+    def _show(self, display: Display):
         display.write_line("CPU: {:3.1f} %".format(self.cpu))
         display.write_line("MEM: {:3.1f} %".format(self.memory))

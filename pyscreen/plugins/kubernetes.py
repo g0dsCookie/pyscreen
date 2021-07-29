@@ -57,6 +57,6 @@ class PodsMenu(Menu):
                     ready += 1
             return {"started": started, "ready": ready, "scheduled": scheduled}
 
-    def _update(self, display: Display):
+    def _show(self, display: Display):
         display.write_line("Scheduled: {:2d}".format(self.pods["scheduled"]))
         display.write_line("Started:   {:2d} ({:2d})".format(self.pods["started"], self.pods["ready"]))

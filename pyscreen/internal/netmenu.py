@@ -28,6 +28,6 @@ class NetMenu(Menu):
     def _update_ipaddress(self):
         return socket.gethostbyname(socket.gethostname())
     
-    def _update(self, display: Display):
+    def _show(self, display: Display):
         display.write_line(self.hostname)
         display.write_line(self.ipaddress)
