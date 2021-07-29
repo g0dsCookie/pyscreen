@@ -1,6 +1,6 @@
 from enum import Enum
 import time
-from typing import Dict, Any
+from typing import Dict, Any, Union
 
 import RPi.GPIO as RPI_GPIO
 
@@ -52,9 +52,15 @@ class LED(GPIO):
         self._blink_interval = self._init_blink_interval
         self._post_init()
 
-    def set_state(self, state: LEDState, interval: float = 0.1):
+    def set_state(self, state: Union[str, LEDState], interval: float = 0.1):
+        if isinstance(state, str):
+            try: state = LEDState[state]
+            except KeyError:
+                self._log.error("invalid state %s", state)
+                return
         if not isinstance(state, LEDState):
             raise TypeError("state has invalid type")
+
         if interval <= 0.1:
             raise ValueError("interval has to be at least 0.1")
         self._state = state
