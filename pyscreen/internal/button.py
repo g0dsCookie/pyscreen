@@ -33,6 +33,8 @@ class Button(GPIO):
             name = action.get("action")
             if not name:
                 raise ValueError("missing name on action")
+            if not name in self._available_actions:
+                raise ValueError("undefined action %s" % name)
             min = int(action.get("min", 0))
             max = int(action.get("max", 0))
             self._actions.append({"action": name, "min": min, "max": max})
