@@ -1,8 +1,8 @@
 import socket
 from typing import Dict, Any
+import os
 
 import kubernetes.client
-import kubernetes.config
 
 from pyscreen.display import Display
 from pyscreen.plugin import Plugin, Author
@@ -24,15 +24,19 @@ class PodsMenu(Menu):
     def __init__(self, cfg: Dict[str, Any]) -> None:
         super().__init__(name="PODS", cfg=cfg)
 
-        if not cfg.get("api_key"):
-            kubernetes.config.load_kube_config()
-            self._config = kubernetes.client.configuration
-        else:
-            self._config = kubernetes.client.Configuration()
-            self._config.host = cfg.get("host", "https://localhost:6443")
-            self._config.api_key_prefix["authorization"] = "Bearer"
-            self._config.api_key["authorization"] = cfg.get("api_key")
-            self._config.verify_ssl = cfg.get("verify_ssl", True)
+        self._config = kubernetes.client.Configuration()
+        self._config.host = cfg.get("host", "https://kubernetes.default.svc:6443")
+        self._config.api_key_prefix["authorization"] = "Bearer"
+        self._config.ssl_ca_cert = cfg.get("ca_file")
+        self._config.verify_ssl = cfg.get("verify_ssl", True)
+
+        self._config.api_key["authorization"] = cfg.get("api_key")
+        if not self._config.api_key["authorization"]:
+            if not os.path.exists("/var/run/secrets/kubernetes.io/serviceaccount/token"):
+                raise ValueError("missing api_key")
+            with open("/var/run/secrets/kubernetes.io/serviceaccount/token", "r") as tokenfile:
+                self._config.api_key["authorization"] = tokenfile.readline()
+            self._config.ssl_ca_cert = "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt"
 
         self._nodename = socket.gethostname()
 
