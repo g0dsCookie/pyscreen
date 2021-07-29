@@ -28,7 +28,7 @@ class PyScreen:
         self._selected_menu = 0
         
         # load plugins
-        self._plugins = PluginParent(cfg.get("plugins", {}))
+        self._plugins = PluginParent(mycfg.get("plugins", {}))
         self._plugins.load_plugins()
         
         self._display = self._load_display(cfg.get("display", {}))
