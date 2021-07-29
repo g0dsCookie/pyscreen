@@ -90,6 +90,16 @@ class PyScreen:
             self._selected_menu = len(self._menus) - 1
         self._log.debug("New selected menu %d", self._selected_menu)
 
+    def reset_led(self):
+        if not self.menu.led:
+            return
+        led = self._gpios.get(self.menu.led)
+        if not led:
+            self._log.error("Could not find LED to reset: %s", self.menu.led)
+            return
+        self._log.info("Resetting LED %s", led.name)
+        led.reset()
+
     def main(self):
         last_menu_update = 0
         last_input = time.time()

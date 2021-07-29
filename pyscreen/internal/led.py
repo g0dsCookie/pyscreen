@@ -18,13 +18,15 @@ class LED(GPIO):
         super().__init__(GPIOType.OUTPUT, cfg)
 
         try:
-            self._state: LEDState = LEDState[cfg.get("state", "off")]
+            self._init_state: LEDState = LEDState[cfg.get("state", "off")]
         except KeyError:
             self._log.error("unknown LED state for %s: %s", self.name, cfg.get("state"))
-            self._state = LEDState.off
+            self._init_state = LEDState.off
 
+        self._state: LEDState = self._init_state
         self._last_blink: float = 0
-        self._blink_interval: float = float(cfg.get("blink_interval", 0.1))
+        self._init_blink_interval: float = float(cfg.get("blink_interval", 0.1))
+        self._blink_interval: float = self._init_blink_interval
 
     @property
     def state(self) -> LEDState: return self._state
@@ -44,6 +46,11 @@ class LED(GPIO):
     def on(self): RPI_GPIO.output(self.pin, RPI_GPIO.HIGH)
 
     def off(self): RPI_GPIO.output(self.pin, RPI_GPIO.LOW)
+
+    def reset(self):
+        self._state = self._init_state
+        self._blink_interval = self._init_blink_interval
+        self._post_init()
 
     def set_state(self, state: LEDState, interval: float = 0.1):
         if not isinstance(state, LEDState):

@@ -11,19 +11,24 @@ from .display import Display
 class Menu(abc.ABC):
     def __init__(self, name: str = None, cfg: Dict[str, Any] = None) -> None:
         self._log = logging.getLogger(self.__class__.__name__)
-        
+
         self._name = name or self.__class__.__name__
-        
+
         cfg = cfg or {}
         self._interval = int(cfg.get("interval", 5))
         self._update_cache: Dict[str, Dict[str, Union[float, Callable]]] = {}
+
+        self._led: str = cfg.get("led")
 
     @property
     def name(self) -> str: return self._name
 
     @property
+    def led(self) -> str: return self._led
+
+    @property
     def log(self) -> logging.Logger: return self._log
-    
+
     @property
     def interval(self) -> int: return self._interval
 
