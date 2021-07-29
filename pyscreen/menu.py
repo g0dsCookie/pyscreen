@@ -19,6 +19,7 @@ class Menu(abc.ABC):
         self._update_cache: Dict[str, Dict[str, Union[float, Callable]]] = {}
 
         self._led: str = cfg.get("led")
+        self._parent = None
 
     @property
     def name(self) -> str: return self._name
@@ -31,6 +32,12 @@ class Menu(abc.ABC):
 
     @property
     def interval(self) -> int: return self._interval
+
+    @property
+    def parent(self): return self._parent
+
+    @parent.setter
+    def parent(self, val): self._parent = val
 
     def _update(self): pass
 
@@ -61,6 +68,7 @@ class Menu(abc.ABC):
             self.log.debug("Updating cache for %s", name)
             info["cache"] = func()
             info["last"] = cur
+        self._update()
 
     def show(self, display: Display):
         display.clear()
