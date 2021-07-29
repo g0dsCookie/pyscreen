@@ -1,0 +1,31 @@
+display:
+  type: ssd1306
+  width: 128
+  height: 32
+  padding:
+    top: 0
+    left: 0
+
+menus:
+  - name: net
+  - name: cpu
+
+gpios:
+  - name: main_led
+    type: led
+    pin: 27
+  - name: main_btn
+    type: button
+    pin: 17
+    bouncetime: 150
+    actions:
+      - action: next_scene
+        max: 1
+      - action: scene_action
+        min: 1.5
+
+pyscreen:
+  plugins:
+    folders:
+      - /pyscreen/plugins
+      - /plugins
