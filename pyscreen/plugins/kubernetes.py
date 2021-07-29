@@ -42,6 +42,15 @@ class PodsMenu(Menu):
     @property
     def pods(self) -> Dict[str, int]: return self._get_cache("pods")
 
+    @property
+    def scheduled_pods(self) -> int: return self.pods["scheduled"]
+
+    @property
+    def started_pods(self) -> int: return self.pods["started"]
+
+    @property
+    def ready_pods(self) -> int: return self.pods["ready"]
+
     def _update_pods(self):
         with kubernetes.client.ApiClient(self._config) as api_client:
             v1 = kubernetes.client.CoreV1Api(api_client)
@@ -58,5 +67,5 @@ class PodsMenu(Menu):
             return {"started": started, "ready": ready, "scheduled": scheduled}
 
     def _show(self, display: Display):
-        display.write_line("Scheduled: {:2d}".format(self.pods["scheduled"]))
-        display.write_line("Started:   {:2d} ({:2d})".format(self.pods["started"], self.pods["ready"]))
+        display.write_line("Scheduled: {:2d}".format(self.scheduled_pods))
+        display.write_line("Started:   {:2d} ({:2d})".format(self.started_pods, self.ready_pods))
