@@ -36,6 +36,9 @@ class PodsMenu(Menu):
 
         self._nodename = socket.gethostname()
 
+        self._led_state = cfg.get("led_state", "blinking")
+        self._led_interval = float(cfg.get("led_interval", 0.5))
+
         interval = cfg.get("interval", {})
         self._add_update_cache("pods", int(interval.get("interval", 30)), self._update_pods)
 
@@ -65,6 +68,16 @@ class PodsMenu(Menu):
                 if pod.status.container_statuses[0].ready:
                     ready += 1
             return {"started": started, "ready": ready, "scheduled": scheduled}
+
+    def _update(self):
+        if not self.led:
+            return
+        led = self.parent.get_led(self.led)
+        if not led:
+            self._log.error("Could not find LED %s", self.led)
+            return
+        if self.ready_pods < self.scheduled_pods or self.started_pods < self.scheduled_pods:
+            led.set_state(self._led_state, interval=self._led_interval)
 
     def _show(self, display: Display):
         display.write_line("Scheduled: {:2d}".format(self.scheduled_pods))
