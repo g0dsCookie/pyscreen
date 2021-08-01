@@ -1,0 +1,77 @@
+image:
+  registry: ghcr.io
+  name: g0dscookie/pyscreen
+  tag: "latest"
+  pullPolicy: Always
+
+deployment:
+  labels: {}
+  annotations: {}
+
+  podLabels: {}
+  podAnnotations: {}
+
+  imagePullSecrets: []
+
+  tolerations:
+    - key: node-role.kubernetes.io/master
+      operator: Exists
+      effect: NoSchedule
+
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: display
+                operator: In
+                values: [pyscreen]
+
+hostNetwork: false
+
+securityContext:
+  privileged: true
+
+serviceAccount:
+  name: ""
+
+config:
+  pyscreen:
+    plugins:
+      folders: [/pyscreen/plugins,/plugins]
+    interval: 0.5
+    standby: 120
+
+  display:
+    type: ssd1306
+    width: 128
+    height: 32
+    padding:
+      top: 0
+      left: 0
+    font:
+      name: DejaVuSansMono.ttf
+      size: 10
+
+  menus:
+    - name: cpu
+    - name: pods
+
+  gpios:
+    - name: main_led
+      type: led
+      pin: 27
+      state: "on"
+    - name: main_btn
+      type: button
+      pin: 17
+      bouncetime: 150
+      actions:
+        - action: next_scene
+          max: 1
+        - action: scene_action
+          min: 2
+          max: 4
+        - action: reset_led
+          min: 5
+          max: 7
