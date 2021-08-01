@@ -25,7 +25,7 @@ class PodsMenu(Menu):
         super().__init__(name="PODS", cfg=cfg)
 
         self._config = kubernetes.client.Configuration()
-        self._config.host = cfg.get("host", "https://kubernetes.default.svc:6443")
+        self._config.host = cfg.get("host", "https://kubernetes.default.svc")
         self._config.api_key_prefix["authorization"] = "Bearer"
         self._config.ssl_ca_cert = cfg.get("ca_file")
         self._config.verify_ssl = cfg.get("verify_ssl", True)
