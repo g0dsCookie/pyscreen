@@ -35,6 +35,8 @@ securityContext:
 serviceAccount:
   name: ""
 
+env: {}
+
 config:
   pyscreen:
     plugins:
@@ -54,6 +56,7 @@ config:
       size: 10
 
   menus:
+    - name: kubenet
     - name: cpu
     - name: pods
 

@@ -1,5 +1,5 @@
 name: pyscreen
-version: "1.0.0"
+version: "1.1.0"
 description: Extensible script to run a screen on your device (i.e. RPI via GPIO).
 apiVersion: v2
 type: application
