@@ -45,13 +45,17 @@ class Menu(abc.ABC):
 
     def _run(self): pass
 
-    def _add_update_cache(self, name: str, interval: float, func: Callable):
+    def _add_update_cache(self, name: str, interval: float, func: Callable, force: bool = False):
         if name in self._update_cache:
             raise ValueError("%s already exists" % name)
+
+        if force:
+            result = func()
+
         self._update_cache[name] = {
             "interval": interval,
-            "last": 0,
-            "cache": None,
+            "last": time.time() if force else 0,
+            "cache": result if force else None,
             "func": func
         }
         self._log.debug("Added update cache task for %s", name)
