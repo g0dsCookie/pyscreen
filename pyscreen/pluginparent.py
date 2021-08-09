@@ -61,7 +61,11 @@ class PluginParent:
                 self._log.error("Failed to load plugin from %s", file)
                 continue
             mod = importlib.util.module_from_spec(spec)
-            spec.loader.exec_module(mod)
+            try:
+                spec.loader.exec_module(mod)
+            except ImportError:
+                self._log.info("Could not load plugin %s", file)
+                continue
 
             for m in dir(mod):
                 if m.startswith("__") or m.endswith("__"):
