@@ -28,10 +28,13 @@ def read_requirements(*args):
             yield line.strip()
 
 
-def list_files(*args):
+def list_pyfiles(*args):
     path = abspath(*args)
     for file in os.listdir(path):
-        yield os.path.join(path, file)
+        file = os.path.join(path, file)
+        if not os.path.isfile(file) or not file.endswith(".py"):
+            continue
+        yield file
 
 
 setup(
@@ -44,7 +47,7 @@ setup(
     license="MIT",
     packages=["pyscreen", "pyscreen.internal"],
     data_files=[
-        ("share/pyscreen/plugins", list(list_files("pyscreen", "plugins")))
+        ("share/pyscreen/plugins", list(list_pyfiles("pyscreen", "plugins")))
     ],
     entry_points=dict(console_scripts=["pyscreen = pyscreen.cli:main"]),
     install_requires=list(read_requirements("requirements.txt")),
