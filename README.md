@@ -23,7 +23,7 @@ A short description of most configuration values will be in the following sectio
 | loglevel | string | INFO | Set log level to use. (DEBUG, INFO, WARNING, ERROR, CRITICAL) |
 | interval | float | 0.1 | Main loop interval in seconds |
 | standby | float | 120 | Time in seconds to poweroff display |
-| plugins.folders | List[string] | [~/.local/lib/pyscreen] | Path to plugin directories |
+| plugins.folders | List[string] | ["\<sys.prefix\>/share/pyscreen/plugins", "\<site.USER_BASE\>/share/pyscreen/plugins"] | Path to plugin directories |
 
 ### Display
 
