@@ -103,3 +103,19 @@ Now you may run pyscreen with `python -m pyscreen.cli`
 **--privileged** is required to access GPIO ports.
 
 **--net=host** is required for NetMenu to display correct hostname and ip address.
+
+## Plugins
+
+Your plugin with all components should be one file.
+Within your plugin file there should be at most one class deriving from *pyscreen.plugin.Plugin*.
+
+You may specify one or more components. Depending on the type of component the
+component must derive from one of the following classes:
+
+| Component | Class |
+| --------- | ----- |
+| Display   | pyscreen.display.Display |
+| Menu      | pyscreen.menu.Menu |
+| GPIO      | pyscreen.GPIO.GPIO |
+
+Examples can be found in **pyscreen/plugins/\*.py** and **pyscreen/internal**. 
