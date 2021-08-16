@@ -39,8 +39,6 @@ env: {}
 
 config:
   pyscreen:
-    plugins:
-      folders: [/pyscreen/plugins,/plugins]
     interval: 0.5
     standby: 120
 
