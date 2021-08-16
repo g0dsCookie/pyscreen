@@ -24,9 +24,3 @@ gpios:
         max: 1
       - action: scene_action
         min: 1.5
-
-pyscreen:
-  plugins:
-    folders:
-      - /pyscreen/plugins
-      - /plugins
