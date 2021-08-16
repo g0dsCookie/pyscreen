@@ -19,7 +19,8 @@ class PluginParent:
     def __init__(self, cfg: Dict[str, Any]):
         self._log = logging.getLogger(self.__class__.__name__)
         self._folders: List[str] = cfg.get("folders", [os.path.join(sys.prefix, "share", "pyscreen", "plugins"),
-                                                       os.path.join(site.USER_BASE, "share", "pyscreen", "plugins")])
+                                                       os.path.join(site.USER_BASE, "share", "pyscreen", "plugins"),
+                                                       "/usr/local/share/pyscreen/plugins"])
         self._plugins: Dict[str, Plugin] = {}
 
     @property
