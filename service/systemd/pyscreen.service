@@ -1,0 +1,10 @@
+[Unit]
+Description=Extensible script to run a screen on your device (i.e. RPI via GPIO).
+
+[Service]
+WorkingDirectory=/etc/pyscreen
+ExecStart=pyscreen
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
