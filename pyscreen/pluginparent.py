@@ -4,6 +4,8 @@ import re
 import importlib.util
 import inspect
 import os
+import sys
+import site
 
 from typing import Dict, List, Any
 
@@ -16,7 +18,8 @@ from .plugin import Plugin
 class PluginParent:
     def __init__(self, cfg: Dict[str, Any]):
         self._log = logging.getLogger(self.__class__.__name__)
-        self._folders: List[str] = cfg.get("folders", [Path.joinpath(Path.home(), ".local", "lib", "pyscreen")])
+        self._folders: List[str] = cfg.get("folders", [os.path.join(sys.prefix, "share", "pyscreen", "plugins"),
+                                                       os.path.join(site.USER_BASE, "share", "pyscreen", "plugins")])
         self._plugins: Dict[str, Plugin] = {}
 
     @property
