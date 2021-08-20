@@ -40,7 +40,7 @@ env: {}
 config:
   pyscreen:
     interval: 0.5
-    standby: 120
+    standby: 10
 
   display:
     type: ssd1306
